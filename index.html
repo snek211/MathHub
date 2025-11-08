@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Hub - Your Student Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .nav-link {
+            transition: all 0.3s;
+            position: relative;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #2563eb; /* blue-600 */
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #2563eb;
+            transition: all 0.3s ease-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        /* Calendar Styles */
+        .calendar-day {
+            transition: all 0.2s;
+            position: relative;
+        }
+        .calendar-day:hover {
+            background-color: #dbeafe; /* blue-100 */
+        }
+        .calendar-day.selected {
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+        }
+        .calendar-day.has-slots::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #8b5cf6; /* purple-500 */
+        }
+        .calendar-day.selected.has-slots::after{
+             background-color: white;
+        }
+        .badge-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #4f46e5; /* indigo-600 */
+        }
+        .badge-icon.locked {
+            background-color: #f3f4f6; /* gray-100 */
+            color: #9ca3af; /* gray-400 */
+        }
+        .badge-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #374151; /* gray-700 */
+        }
+        .badge-title.locked {
+            color: #9ca3af; /* gray-400 */
+        }
+        
+        /* --- NEW: Mini-Calculator Styles --- */
+        #mini-calc {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 340px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        #mini-calc.enlarged {
+            width: 420px;
+            bottom: 50%;
+            right: 50%;
+            transform: translate(50%, 50%);
+        }
+        #mini-calc.hidden {
+            display: none;
+        }
+        #mini-calc.minimized {
+            width: 200px;
+            height: 40px;
+            overflow: hidden;
+        }
+        #mini-calc:hover {
+            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.4), 0 15px 15px -5px rgba(0, 0, 0, 0.3);
+        }
+        #calc-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+            padding: 8px 12px;
+            border-top-left-radius: 0.875rem;
+            border-top-right-radius: 0.875rem;
+            cursor: move;
+            user-select: none;
+            backdrop-filter: blur(10px);
+        }
+        #calc-display {
+            width: 100%;
+            border: none;
+            padding: 1.5rem 1rem;
+            text-align: right;
+            font-size: 2rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937;
+            font-family: 'Courier New', monospace;
+            min-height: 80px;
+            overflow-x: auto;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        #calc-display.error {
+            color: #ef4444;
+            animation: shake 0.3s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        #calc-display::-webkit-scrollbar {
+            height: 4px;
+        }
+        #calc-display::-webkit-scrollbar-thumb {
+            background: #9333ea;
+            border-radius: 2px;
+        }
+        #calc-keys {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-bottom-left-radius: 0.875rem;
+            border-bottom-right-radius: 0.875rem;
+        }
+        .calc-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+        }
+        .calc-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .calc-btn.operator {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+        .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+        }
+        .calc-btn.equals {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            font-size: 1.5rem;
+        }
+        .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+        }
+        .calc-btn.special {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-size: 0.875rem;
+        }
+        .calc-btn.special:hover {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        }
+        .calc-btn.clear {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+        }
+
+        /* --- NEW: Calculus Climber Styles --- */
+        #calc-game-wrapper {
+            position: relative;
+            min-height: 400px;
+        }
+        #mountain-path {
+            position: absolute;
+            top: 10%;
+            bottom: 10%;
+            right: 0px;
+            width: 50px;
+            background-image: linear-gradient(to bottom, #d1d5db, #6b7280);
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #climber-icon {
+            position: absolute;
+            bottom: 0%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            transition: bottom 0.5s ease-out;
+        }
+        #calc-gear-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .gear-icon {
+            width: 24px;
+            height: 24px;
+            color: #10b981; /* green-500 */
+            transition: all 0.3s;
+        }
+        .gear-icon.lost {
+            opacity: 0.2;
+            transform: scale(0.8);
+        }
+
+        /* --- NEW: Geo-Lane Rush Styles --- */
+        #geo-game-screen {
+            position: relative;
+            height: 350px;
+            background-color: #1f2937; /* gray-800 */
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.4);
+        }
+        /* Lane lines */
+        #geo-game-screen::before, #geo-game-screen::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #4b5563; /* gray-600 */
+            z-index: 1;
+        }
+        #geo-game-screen::before { top: 33.33%; }
+        #geo-game-screen::after { top: 66.66%; }
+        
+        #geo-player {
+            position: absolute;
+            left: 30px;
+            width: 40px;
+            height: 40px;
+            background-color: #a855f7; /* purple-500 */
+            border-radius: 0.25rem;
+            z-index: 10;
+            transition: top 0.1s linear;
+        }
+        
+        .geo-wall {
+            position: absolute;
+            top: 0;
+            right: -100px; /* Start off-screen */
+            width: 60px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+        }
+        
+        .geo-gate {
+            width: 100%;
+            height: 33.33%;
+            background-color: #ef4444; /* red-500 */
+            border-bottom: 2px solid #1f2937;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .geo-gate.open {
+            background-color: transparent; /* This is the opening */
+        }
+        .geo-gate-text {
+            position: absolute;
+            left: 110%; /* Show text just in front of the gate */
+            width: 100px; /* Give it space */
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-shadow: 0 0 5px black;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <header class="bg-white/80 shadow-sm sticky top-0 z-50 backdrop-blur-lg">
+        <nav role="navigation" class="container mx-auto px-6 py-4 flex justify-center items-center">
+            <a href="#home" class="text-2xl font-bold gradient-text absolute left-6">Math Hub</a>
+            <div class="hidden md:flex space-x-8 items-center font-medium text-gray-600">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#courses" class="nav-link">Courses</a>
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#tutoring" class="nav-link">Tutoring</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <main role="main" class="container mx-auto px-6 py-8 md:py-12">
+        <section id="home" class="page active fade-in" role="region" aria-labelledby="home-title">
+            <div class="text-center py-16 md:py-24">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-1 rounded-full inline-block mb-4 animate-pulse">
+                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-semibold">By Students, For Students</span>
+                </div>
+                <h1 id="home-title" class="text-5xl md:text-7xl font-extrabold text-gray-900">Unlock Your <span class="gradient-text">Math Potential</span></h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Engaging videos, interactive games, and live tutoring to help you conquer any math challenge.</p>
+                <a href="#courses" class="mt-10 inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-xl">Start Learning Now</a>
+            </div>
+
+
+            <div class="py-16">
+                 <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Everything You Need to Succeed</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                     <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
+                         <div class="bg-blue-100 text-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                         </div>
+                         <h3 class="text-xl font-bold mb-2">Video Tutorials</h3>
+                         <p class="text-gray-600">Watch clear, concise video lessons on every math topic.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
+                         <div class="bg-purple-100 text-purple-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" /></svg>
+                         </div>
+                         <h3 class="text-xl font-bold mb-2">Learning Games</h3>
+                         <p class="text-gray-600">Play fun games that strengthen your math skills.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
+                         <div class="bg-green-100 text-green-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                         </div>
+                         <h3 class="text-xl font-bold mb-2">Practice Quizzes</h3>
+                         <p class="text-gray-600">Test your knowledge with interactive quizzes and tests.</p>
+                     </div>
+                      <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
+                         <div class="bg-yellow-100 text-yellow-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                         </div>
+                         <h3 class="text-xl font-bold mb-2">Live Tutoring</h3>
+                         <p class="text-gray-600">Schedule 1-on-1 or group sessions with expert teachers.</p>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+
+        <section id="courses" class="page fade-in" role="region" aria-labelledby="courses-title">
+            <h2 id="courses-title" class="text-4xl font-bold text-center text-gray-800 mb-12">Choose Your Subject</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra1" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-blue-600">Algebra 1</h3><p class="mt-2 text-gray-600">Master functions, equations, and variables.</p>
+                </div>
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="geometry" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-purple-600">Geometry</h3><p class="mt-2 text-gray-600">Explore shapes, angles, and proofs.</p>
+                </div>
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra2" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-green-600">Algebra 2</h3><p class="mt-2 text-gray-600">Dive into advanced topics and polynomials.</p>
+                </div>
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="precalculus" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-yellow-600">Pre-Calculus</h3><p class="mt-2 text-gray-600">Prepare for calculus with trigonometry and series.</p>
+                </div>
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="calculus" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-red-600">Calculus</h3><p class="mt-2 text-gray-600">Understand limits, derivatives, and integrals.</p>
+                </div>
+                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="statistics" role="button" tabindex="0">
+                    <h3 class="text-2xl font-bold text-indigo-600">Statistics</h3><p class="mt-2 text-gray-600">Analyze data and understand probability.</p>
+                </div>
+            </div>
+             <div id="course-content-area" class="mt-12 bg-white p-8 rounded-lg shadow-md hidden">
+                <h3 id="course-title" class="text-3xl font-bold"></h3>
+                <div id="course-details" class="mt-6"></div>
+            </div>
+        </section>
+       
+        <section id="games" class="page fade-in" role="region" aria-labelledby="games-title">
+             <h2 id="games-title" class="text-4xl font-bold text-center text-gray-800 mb-12">Learn Through Gaming</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
+                    <div class="bg-blue-500 h-48 flex items-center justify-center">
+                       <span class="text-white text-5xl font-bold">24</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold">Equation Challenge</h3>
+                        <p class="mt-2 text-gray-600">Race against the clock to solve algebraic equations!</p>
+                        <a href="#equation-challenge" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition block text-center">Play Now</a>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
+                    <div class="bg-purple-500 h-48 flex items-center justify-center">
+                       <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold">Geo-Lane Rush</h3>
+                        <p class="mt-2 text-gray-600">Dodge obstacles by solving geometry problems at high speed.</p>
+                         <a href="#geometry-dash" class="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition block text-center">Play Now</a>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
+                    <div class="bg-green-500 h-48 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm0 0h6.5m0 0l1-1m-1 1l-1 1m0 0H3m3.5-4H7m0 0l1 1m-1-1l-1 1m0 0H3" /></svg>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold">Calculus Climber</h3>
+                        <p class="mt-2 text-gray-600">Climb the mountain by solving derivatives with precision.</p>
+                         <a href="#calculus-climber" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition block text-center">Play Now</a>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+
+        <section id="equation-challenge" class="page fade-in" role="region" aria-labelledby="eq-title">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <a href="#games" class="text-blue-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
+                    <h2 id="eq-title" class="text-4xl font-bold text-gray-800 mb-4">Equation Challenge</h2>
+                    <p class="text-gray-600">Solve as many equations as you can before time runs out!</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Score</p>
+                            <p id="eq-score" class="text-3xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Time Left</p>
+                            <p id="eq-timer" class="text-3xl font-bold text-red-600">60</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Streak</p>
+                            <p id="eq-streak" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                    </div>
+                    <div id="eq-game-area" class="text-center">
+                        <button id="eq-start-btn" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-blue-700 transition-all shadow-lg">Start Game</button>
+                    </div>
+                    <div id="eq-question-area" class="hidden">
+                        <div class="bg-blue-50 p-6 rounded-lg mb-6" role="region" aria-live="polite">
+                            <p class="text-gray-700 mb-2" id="eq-question-label">Solve for x:</p>
+                            <p id="eq-question" class="text-3xl font-bold text-gray-900"></p>
+                        </div>
+                        <div class="flex gap-4">
+                            <input type="number" id="eq-answer" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg text-xl focus:outline-none focus:border-blue-500" placeholder="Your answer" aria-labelledby="eq-question-label">
+                            <button id="eq-submit-btn" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">Submit</button>
+                        </div>
+                        <div id="eq-feedback" class="mt-4 text-center font-semibold text-lg" role="alert" aria-live="assertive"></div>
+                    </div>
+                    <div id="eq-game-over" class="hidden text-center" role="region" aria-live="polite">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4">Game Over!</h3>
+                        <p class="text-xl text-gray-600 mb-2">Final Score: <span id="eq-final-score" class="text-blue-600 font-bold"></span></p>
+                        <p class="text-xl text-gray-600 mb-6">Best Streak: <span id="eq-best-streak" class="text-green-600 font-bold"></span></p>
+                        <button id="eq-restart-btn" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-blue-700 transition-all shadow-lg">Play Again</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="geometry-dash" class="page fade-in" role="region" aria-labelledby="geo-title">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <a href="#games" class="text-purple-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
+                    <h2 id="geo-title" class="text-4xl font-bold text-gray-800 mb-4">Geo-Lane Rush</h2>
+                    <p class="text-gray-600">Use Arrow Keys (Up/Down) to move to the correct lane!</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Score</p>
+                            <p id="geo-score" class="text-3xl font-bold text-purple-600">0</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Speed</p>
+                            <p id="geo-speed" class="text-3xl font-bold text-blue-600">1x</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Lives</p>
+                            <div id="geo-lives-container" class="flex justify-center gap-1.5 mt-1">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div id="geo-game-area" class="text-center">
+                        <button id="geo-start-btn" class="bg-purple-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-purple-700 transition-all shadow-lg">Start Game</A>
+                    </div>
+
+                    <div id="geo-question-area" class="hidden">
+                        <div id="geo-question-display" class="bg-purple-50 p-4 rounded-lg mb-4 text-center" role="region" aria-live="polite">
+                            <p id="geo-question" class="text-xl font-bold text-gray-900"></p>
+                            <div id="geo-shape-display" class="flex justify-center items-center h-20"></div>
+                        </div>
+                        
+                        <div id="geo-game-screen">
+                            <div id="geo-player" style="top: 155px;"></div>
+                            </div>
+                        
+                        <div id="geo-feedback" class="mt-4 text-center font-semibold text-lg" role="alert" aria-live="assertive"></div>
+                    </div>
+
+                    <div id="geo-game-over" class="hidden text-center" role="region" aria-live="polite">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4">You Crashed!</h3>
+                        <p class="text-xl text-gray-600 mb-2">Final Score: <span id="geo-final-score" class="text-purple-600 font-bold"></span></p>
+                        <button id="geo-restart-btn" class="bg-purple-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-purple-700 transition-all shadow-lg">Play Again</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculus-climber" class="page fade-in" role="region" aria-labelledby="calc-title">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <a href="#games" class="text-green-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
+                    <h2 id="calc-title" class="text-4xl font-bold text-gray-800 mb-4">Calculus Climber</h2>
+                    <p class="text-gray-600">Solve with precision to climb the mountain. 3 wrong answers and you fall!</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Altitude (m)</p>
+                            <p id="calc-score" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Time Left</p>
+                            <p id="calc-timer" class="text-3xl font-bold text-red-600">60</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">Gear</p>
+                            <div id="calc-gear-container" class="flex justify-center gap-1.5 mt-1">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div id="calc-game-area" class="text-center">
+                        <button id="calc-start-btn" class="bg-green-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-green-700 transition-all shadow-lg">Start Climb</button>
+                    </div>
+
+                    <div id="calc-question-area" class="hidden">
+                        <div id="calc-game-wrapper">
+                            <div id="mountain-path">
+                                <div id="climber-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-900" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+                                </div>
+                            </div>
+                            
+                            <div class="max-w-md">
+                                <div class="bg-green-50 p-6 rounded-lg mb-6" role="region" aria-live="polite">
+                                    <p class="text-gray-700 mb-2" id="calc-question-label">Find the answer:</p>
+                                    <p id="calc-question" class="text-3xl font-bold text-gray-900"></p>
+                                </div>
+                                <div class="flex gap-4">
+                                    <input type="text" id="calc-answer" class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg text-xl focus:outline-none focus:border-green-500" placeholder="Your answer" aria-labelledby="calc-question-label">
+                                    <button id="calc-submit-btn" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">Submit</button>
+                                </div>
+                                <div id="calc-feedback" class="mt-4 text-center font-semibold text-lg" role="alert" aria-live="assertive"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="calc-game-over" class="hidden text-center" role="region" aria-live="polite">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4">Game Over!</h3>
+                        <p class="text-xl text-gray-600 mb-2">Final Altitude: <span id="calc-final-score" class="text-green-600 font-bold"></span>m</p>
+                        <p id="calc-end-message" class="text-lg text-gray-500 mb-6"></p>
+                        <button id="calc-restart-btn" class="bg-green-600 text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-green-700 transition-all shadow-lg">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="dashboard" class="page fade-in" role="region" aria-labelledby="dashboard-title">
+            <h2 id="dashboard-title" class="text-4xl font-bold text-gray-800 mb-12 text-center">My Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm">Total Points</p>
+                            <p id="total-points" class="text-3xl font-bold">1,247</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-purple-100 text-sm">Games Played</p>
+                            <p id="total-games" class="text-3xl font-bold">28</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" /></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100 text-sm">Quizzes Completed</p>
+                            <p id="total-quizzes" class="text-3xl font-bold">15</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-yellow-100 text-sm">Current Streak</p>
+                            <p id="current-streak" class="text-3xl font-bold">7 days</p>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                            Quiz Scores
+                        </h3>
+                        <div id="quiz-scores-list" class="space-y-4"></div>
+                        <div class="mt-8">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-4">Quiz Performance</h4>
+                            <div class="h-64">
+                                <canvas id="quiz-score-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.05 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                            My Badges
+                        </h3>
+                        <div id="badge-list" class="grid grid-cols-3 md:grid-cols-5 gap-4 text-center"></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            Game Statistics
+                        </h3>
+                        <div id="game-stats-list" class="space-y-4"></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                            Course Progress
+                        </h3>
+                        <div id="course-progress-list" class="space-y-6"></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Lesson Checklist
+                        </h3>
+                        <div id="lesson-checklist" class="space-y-3" role="list"></div>
+                    </div>
+                </div>
+                <div class="lg:col-span-1">
+                    <div class="sticky top-24 space-y-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                             <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                My Upcoming Sessions
+                            </h3>
+                            <div id="my-schedule-list" class="space-y-4 max-h-64 overflow-y-auto"></div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                Recent Activity
+                            </h3>
+                            <div id="activity-feed" class="space-y-4 max-h-[calc(100vh-20rem)] overflow-y-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tutoring" class="page fade-in" role="region" aria-labelledby="tutoring-title">
+            <h2 id="tutoring-title" class="text-4xl font-bold text-gray-800 mb-12 text-center">Tutor Scheduling</h2>
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex justify-center gap-6 mb-6">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">1-on-1 Session</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                        <span class="text-sm text-gray-600">Group Study</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2">
+                        <div class="flex items-center justify-between mb-6">
+                            <button id="prev-month" class="p-2 rounded-full hover:bg-gray-100" aria-label="Previous month">&lt;</button>
+                            <h3 id="month-year" class="text-2xl font-bold" aria-live="polite"></h3>
+                            <button id="next-month" class="p-2 rounded-full hover:bg-gray-100" aria-label="Next month">&gt;</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center font-semibold text-gray-600 mb-2" role="grid">
+                            <div role="columnheader">Sun</div><div role="columnheader">Mon</div><div role="columnheader">Tue</div><div role="columnheader">Wed</div><div role="columnheader">Thu</div><div role="columnheader">Fri</div><div role="columnheader">Sat</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-2" role="grid"></div>
+                    </div>
+                    <div class="border-l pl-8" role="region" aria-live="polite">
+                        <h4 class="text-xl font-bold mb-4">Available on <span id="selected-date-display">...</span></h4>
+                        <div id="schedule-display" class="space-y-4">
+                            <p class="text-gray-500">Select a day to see available tutoring slots.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <section id="about" class="page fade-in max-w-4xl mx-auto" role="region" aria-labelledby="about-title">
+            <h2 id="about-title" class="text-4xl font-bold text-gray-800 mb-6 text-center">About Math Hub</h2>
+            <div class="space-y-6 text-gray-700 leading-relaxed bg-white p-10 rounded-xl shadow-lg">
+                <p class="text-lg">Math Hub is a student-led initiative designed to make learning math more engaging, collaborative, and accessible. We believe that peer-to-peer support is one of the most effective ways to learn, which is why we've created this platform to connect students with resources and tutors.</p>
+                <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Our Mission</h3>
+                <p>Our mission is to build a supportive online community where students can find the help they need, track their progress, and feel motivated to succeed in mathematics. We aim to provide high-quality, easy-to-understand resources that supplement classroom learning.</p>
+                 <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Planning & Development (FBLA)</h3>
+                <p>This website was designed and developed for the FBLA Website Design competition. Our process focused on user-centered design principles to meet the 2025-2026 topic: "Design to Learn: Build a Student Learning Hub."</p>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <li><strong>Planning:</strong> We identified the core needs of a student user: access to resources, progress tracking, and personalized help. This led to the three key features: the Resources section, the Student Dashboard (post-login), and the interactive Tutoring Calendar.</li>
+                    <li><strong>Design:</strong> To stand out, we chose a vibrant, energetic color palette and incorporated modern design elements like gradients and subtle animations. The layout is fully responsive, ensuring compatibility on desktops, tablets, and mobile devices, as per competition guidelines.</li>
+                    <li><strong>Implementation:</strong> The site is built as a single-page application using HTML, Tailwind CSS, and JavaScript. This approach provides a seamless user experience. Interactive elements like the tutoring calendar, quizzes, and learning games were implemented to maximize user engagement.</li>
+                </ul>
+                <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Measuring Success</h3>
+                <p>To evaluate the effectiveness of this platform, we plan to track key metrics such as user engagement time, completion rates for quizzes and games, and the number of tutoring sessions booked through the calendar. This data will help us continuously improve the learning experience.</p>
+            </div>
+        </section>
+
+
+    </main>
+
+
+    <footer class="bg-gray-800 text-white mt-16" role="contentinfo">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="text-2xl font-bold gradient-text">Math Hub</p>
+            <p class="mt-2 text-gray-400">&copy; 2025 Math Hub. Created for the FBLA Website Design Competition.</p>
+            <button id="show-calc-btn" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all text-sm shadow-lg hover:shadow-xl">
+                🧮 Show Calculator
+            </button>
+            <p class="mt-2 text-xs text-gray-500">Drag to move • Keyboard shortcuts supported</p>
+        </div>
+    </footer>
+
+    <div id="mini-calc" class="hidden">
+        <div id="calc-header" class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-white pl-1">Math Calculator</span>
+            <div class="flex gap-1">
+                <button id="calc-minimize" class="p-1 hover:bg-white/20 rounded transition" title="Minimize">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
+                </button>
+                <button id="calc-enlarge" class="p-1 hover:bg-white/20 rounded transition" title="Maximize">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
+                </button>
+                <button id="calc-close" class="p-1 hover:bg-white/20 rounded transition" title="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+        </div>
+        <input type="text" id="calc-display" readonly value="0">
+        <div id="calc-keys">
+            <button class="calc-btn clear" data-value="C">C</button>
+            <button class="calc-btn special" data-value="(" title="Open parenthesis">(</button>
+            <button class="calc-btn special" data-value=")" title="Close parenthesis">)</button>
+            <button class="calc-btn special" data-value="√" title="Square root">√</button>
+            <button class="calc-btn operator" data-value="/" title="Divide">÷</button>
+
+            <button class="calc-btn" data-value="7">7</button>
+            <button class="calc-btn" data-value="8">8</button>
+            <button class="calc-btn" data-value="9">9</button>
+            <button class="calc-btn special" data-value="^" title="Power">x²</button>
+            <button class="calc-btn operator" data-value="*" title="Multiply">×</button>
+
+            <button class="calc-btn" data-value="4">4</button>
+            <button class="calc-btn" data-value="5">5</button>
+            <button class="calc-btn" data-value="6">6</button>
+            <button class="calc-btn special" data-value="%" title="Percentage">%</button>
+            <button class="calc-btn operator" data-value="-" title="Subtract">−</button>
+
+            <button class="calc-btn" data-value="1">1</button>
+            <button class="calc-btn" data-value="2">2</button>
+            <button class="calc-btn" data-value="3">3</button>
+            <button class="calc-btn special" data-value="⌫" title="Backspace">⌫</button>
+            <button class="calc-btn operator" data-value="+" title="Add">+</button>
+
+            <button class="calc-btn" data-value="0" style="grid-column: span 2;">0</button>
+            <button class="calc-btn" data-value=".">.</button>
+            <button class="calc-btn special" data-value="+/-" title="Toggle sign">+/−</button>
+            <button class="calc-btn equals" data-value="=" title="Equals">=</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
