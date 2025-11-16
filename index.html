@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Hub - Your Student Learning Hub</title>
@@ -35,19 +33,24 @@
             width: 100%;
             left: 0;
         }
+        
+        /* --- NEW: Animation-ready Page CSS --- */
+        /* Pages are hidden by default */
         .page {
             display: none;
+            opacity: 0; /* Start as invisible for animation */
         }
+        /* The .active class (added by main.js) makes it visible */
         .page.active {
             display: block;
+            animation: fadeIn 0.6s ease-out forwards;
         }
+        /* The animation you liked */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
+        
         .card-hover-effect {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -55,7 +58,15 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
-        /* Calendar Styles */
+        
+        /* --- NEW: Course Image Style --- */
+        .course-img {
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Original Calendar Styles (Unchanged) --- */
         .calendar-day {
             transition: all 0.2s;
             position: relative;
@@ -82,6 +93,8 @@
         .calendar-day.selected.has-slots::after{
              background-color: white;
         }
+        
+        /* --- Original Dashboard/Badge Styles (Unchanged) --- */
         .badge-icon {
             width: 64px;
             height: 64px;
@@ -106,7 +119,7 @@
             color: #9ca3af; /* gray-400 */
         }
         
-        /* --- NEW: Mini-Calculator Styles --- */
+        /* --- Original Calculator Styles (Unchanged) --- */
         #mini-calc {
             position: fixed;
             bottom: 20px;
@@ -237,7 +250,7 @@
             background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
         }
 
-        /* --- NEW: Calculus Climber Styles --- */
+        /* --- Original Game Styles (Unchanged) --- */
         #calc-game-wrapper {
             position: relative;
             min-height: 400px;
@@ -275,8 +288,6 @@
             opacity: 0.2;
             transform: scale(0.8);
         }
-
-        /* --- NEW: Geo-Lane Rush Styles --- */
         #geo-game-screen {
             position: relative;
             height: 350px;
@@ -285,7 +296,6 @@
             border-radius: 0.5rem;
             box-shadow: inset 0 4px 10px rgba(0,0,0,0.4);
         }
-        /* Lane lines */
         #geo-game-screen::before, #geo-game-screen::after {
             content: '';
             position: absolute;
@@ -342,12 +352,18 @@
             font-weight: 600;
             text-shadow: 0 0 5px black;
         }
+        .gradient-text {
+             background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+        }
     </style>
 </head>
 <body class="text-gray-800">
     <header class="bg-white/80 shadow-sm sticky top-0 z-50 backdrop-blur-lg">
-        <nav role="navigation" class="container mx-auto px-6 py-4 flex justify-center items-center">
-            <a href="#home" class="text-2xl font-bold gradient-text absolute left-6">Math Hub</a>
+        <nav role="navigation" class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold gradient-text">Math Hub</a>
             <div class="hidden md:flex space-x-8 items-center font-medium text-gray-600">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#courses" class="nav-link">Courses</a>
@@ -356,21 +372,38 @@
                 <a href="#tutoring" class="nav-link">Tutoring</a>
                 <a href="#about" class="nav-link">About</a>
             </div>
+            <div class="md:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </div>
         </nav>
     </header>
 
 
     <main role="main" class="container mx-auto px-6 py-8 md:py-12">
-        <section id="home" class="page active fade-in" role="region" aria-labelledby="home-title">
-            <div class="text-center py-16 md:py-24">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-1 rounded-full inline-block mb-4 animate-pulse">
-                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-semibold">By Students, For Students</span>
+        
+        <section id="home" class="page active" role="region" aria-labelledby="home-title">
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-900 text-white mb-16">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+                     alt="Students learning" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-40">
+                <div class="relative z-10 px-8 py-24 md:py-32 text-center max-w-4xl mx-auto">
+                    <span class="inline-block py-1 px-3 rounded-full bg-blue-500/30 border border-blue-400 text-blue-100 text-sm font-semibold mb-6 backdrop-blur-sm">
+                        By Students, For Students
+                    </span>
+                    <h1 id="home-title" class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+                        Unlock Your <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Math Potential</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-200 mb-10 leading-relaxed">
+                        Engaging videos, interactive games, and live tutoring to help you conquer any math challenge.
+                    </p>
+                    <a href="#courses" class="mt-10 inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-xl">
+                        Start Learning Now
+                    </a>
                 </div>
-                <h1 id="home-title" class="text-5xl md:text-7xl font-extrabold text-gray-900">Unlock Your <span class="gradient-text">Math Potential</span></h1>
-                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Engaging videos, interactive games, and live tutoring to help you conquer any math challenge.</p>
-                <a href="#courses" class="mt-10 inline-block bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-xl">Start Learning Now</a>
             </div>
-
 
             <div class="py-16">
                  <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Everything You Need to Succeed</h2>
@@ -407,37 +440,57 @@
             </div>
         </section>
 
-
-        <section id="courses" class="page fade-in" role="region" aria-labelledby="courses-title">
+        <section id="courses" class="page" role="region" aria-labelledby="courses-title">
             <h2 id="courses-title" class="text-4xl font-bold text-center text-gray-800 mb-12">Choose Your Subject</h2>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra1" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-blue-600">Algebra 1</h3><p class="mt-2 text-gray-600">Master functions, equations, and variables.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra1" role="button" tabindex="0">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Algebra" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-blue-600">Algebra 1</h3><p class="mt-2 text-gray-600">Master functions, equations, and variables.</p>
+                    </div>
                 </div>
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="geometry" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-purple-600">Geometry</h3><p class="mt-2 text-gray-600">Explore shapes, angles, and proofs.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="geometry" role="button" tabindex="0">
+                    <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80" alt="Geometry" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-purple-600">Geometry</h3><p class="mt-2 text-gray-600">Explore shapes, angles, and proofs.</p>
+                    </div>
                 </div>
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra2" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-green-600">Algebra 2</h3><p class="mt-2 text-gray-600">Dive into advanced topics and polynomials.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="algebra2" role="button" tabindex="0">
+                    <img src="https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=600&q=80" alt="Algebra 2" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-green-600">Algebra 2</h3><p class="mt-2 text-gray-600">Dive into advanced topics and polynomials.</p>
+                    </div>
                 </div>
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="precalculus" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-yellow-600">Pre-Calculus</h3><p class="mt-2 text-gray-600">Prepare for calculus with trigonometry and series.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="precalculus" role="button" tabindex="0">
+                    <img src="httpsT://images.unsplash.com/photo-1543286386-2e65930686B5?auto=format&fit=crop&w=600&q=80" alt="Pre-Calculus" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-yellow-600">Pre-Calculus</h3><p class="mt-2 text-gray-600">Prepare for calculus with trigonometry and series.</p>
+                    </div>
                 </div>
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="calculus" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-red-600">Calculus</h3><p class="mt-2 text-gray-600">Understand limits, derivatives, and integrals.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="calculus" role="button" tabindex="0">
+                    <img src="https://images.unsplash.com/photo-1633511843141-91a169225732?auto=format&fit=crop&w=600&q=80" alt="Calculus" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-red-600">Calculus</h3><p class="mt-2 text-gray-600">Understand limits, derivatives, and integrals.</p>
+                    </div>
                 </div>
-                <div class="course-card bg-white p-6 rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="statistics" role="button" tabindex="0">
-                    <h3 class="text-2xl font-bold text-indigo-600">Statistics</h3><p class="mt-2 text-gray-600">Analyze data and understand probability.</p>
+                <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="statistics" role="button" tabindex="0">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Statistics" class="course-img rounded-t-xl">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-indigo-600">Statistics</h3><p class="mt-2 text-gray-600">Analyze data and understand probability.</p>
+                    </div>
                 </div>
             </div>
+            
              <div id="course-content-area" class="mt-12 bg-white p-8 rounded-lg shadow-md hidden">
                 <h3 id="course-title" class="text-3xl font-bold"></h3>
                 <div id="course-details" class="mt-6"></div>
             </div>
         </section>
        
-        <section id="games" class="page fade-in" role="region" aria-labelledby="games-title">
+        <section id="games" class="page" role="region" aria-labelledby="games-title">
              <h2 id="games-title" class="text-4xl font-bold text-center text-gray-800 mb-12">Learn Through Gaming</h2>
+             
              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                  <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
                     <div class="bg-blue-500 h-48 flex items-center justify-center">
@@ -472,8 +525,7 @@
              </div>
         </section>
 
-
-        <section id="equation-challenge" class="page fade-in" role="region" aria-labelledby="eq-title">
+        <section id="equation-challenge" class="page" role="region" aria-labelledby="eq-title">
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-8">
                     <a href="#games" class="text-blue-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
@@ -519,7 +571,7 @@
             </div>
         </section>
 
-        <section id="geometry-dash" class="page fade-in" role="region" aria-labelledby="geo-title">
+        <section id="geometry-dash" class="page" role="region" aria-labelledby="geo-title">
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-8">
                     <a href="#games" class="text-purple-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
@@ -570,7 +622,7 @@
             </div>
         </section>
 
-        <section id="calculus-climber" class="page fade-in" role="region" aria-labelledby="calc-title">
+        <section id="calculus-climber" class="page" role="region" aria-labelledby="calc-title">
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-8">
                     <a href="#games" class="text-green-600 hover:underline mb-4 inline-block">&larr; Back to Games</a>
@@ -632,7 +684,7 @@
         </section>
 
 
-        <section id="dashboard" class="page fade-in" role="region" aria-labelledby="dashboard-title">
+        <section id="dashboard" class="page" role="region" aria-labelledby="dashboard-title">
             <h2 id="dashboard-title" class="text-4xl font-bold text-gray-800 mb-12 text-center">My Dashboard</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
@@ -745,7 +797,7 @@
             </div>
         </section>
 
-        <section id="tutoring" class="page fade-in" role="region" aria-labelledby="tutoring-title">
+        <section id="tutoring" class="page" role="region" aria-labelledby="tutoring-title">
             <h2 id="tutoring-title" class="text-4xl font-bold text-gray-800 mb-12 text-center">Tutor Scheduling</h2>
             <div class="bg-white rounded-xl shadow-lg p-8">
                 <div class="flex justify-center gap-6 mb-6">
@@ -783,7 +835,7 @@
 
 
 
-        <section id="about" class="page fade-in max-w-4xl mx-auto" role="region" aria-labelledby="about-title">
+        <section id="about" class="page max-w-4xl mx-auto" role="region" aria-labelledby="about-title">
             <h2 id="about-title" class="text-4xl font-bold text-gray-800 mb-6 text-center">About Math Hub</h2>
             <div class="space-y-6 text-gray-700 leading-relaxed bg-white p-10 rounded-xl shadow-lg">
                 <p class="text-lg">Math Hub is a student-led initiative designed to make learning math more engaging, collaborative, and accessible. We believe that peer-to-peer support is one of the most effective ways to learn, which is why we've created this platform to connect students with resources and tutors.</p>
@@ -825,7 +877,7 @@
                 </button>
                 <button id="calc-enlarge" class="p-1 hover:bg-white/20 rounded transition" title="Maximize">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
-                </button>
+CHOOSE_VOTE_ACTION_DIRECT</button>
                 <button id="calc-close" class="p-1 hover:bg-white/20 rounded transition" title="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
