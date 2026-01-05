@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f0f4f8; /* Kept your nice bg color */
         }
         .nav-link {
             transition: all 0.3s;
@@ -34,18 +34,15 @@
             left: 0;
         }
         
-        /* --- NEW: Animation-ready Page CSS --- */
-        /* Pages are hidden by default */
+        /* This is the "load nicely" animation you have! */
         .page {
             display: none;
             opacity: 0; /* Start as invisible for animation */
         }
-        /* The .active class (added by main.js) makes it visible */
         .page.active {
             display: block;
             animation: fadeIn 0.6s ease-out forwards;
         }
-        /* The animation you liked */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -59,11 +56,24 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         
-        /* --- NEW: Course Image Style --- */
         .course-img {
             height: 160px;
             width: 100%;
             object-fit: cover;
+        }
+
+        /* --- NEW: Game Image Style --- */
+        /* Added this to style the new game card images */
+        .game-img {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        /* --- NEW: Crisper Cards --- */
+        /* Added a subtle border to all white cards for a cleaner look */
+        .bg-white {
+            border: 1px solid #f3f4f6; /* gray-100 */
         }
 
         /* --- Original Calendar Styles (Unchanged) --- */
@@ -356,7 +366,8 @@
              background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+            /* --- UPDATED: New Gradient --- */
+            background-image: linear-gradient(to right, #10b981, #3b82f6); /* green-500 to blue-500 */
         }
     </style>
 </head>
@@ -385,11 +396,10 @@
         
         <section id="home" class="page active" role="region" aria-labelledby="home-title">
             <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-900 text-white mb-16">
-                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
-                     alt="Students learning" 
-                     class="absolute inset-0 w-full h-full object-cover opacity-40">
-                <div class="relative z-10 px-8 py-24 md:py-32 text-center max-w-4xl mx-auto">
-                    <span class="inline-block py-1 px-3 rounded-full bg-blue-500/30 border border-blue-400 text-blue-100 text-sm font-semibold mb-6 backdrop-blur-sm">
+                <img src="https://images.unsplash.com/photo-1518644730705-e063185382e7?auto=format&fit=crop&w=1950&q=80" 
+                     alt="Abstract geometric shapes and math formulas" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-50"> <div class="relative z-10 px-8 py-24 md:py-32 text-center max-w-4xl mx-auto">
+                    <span class="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-blue-100 text-sm font-semibold mb-6 backdrop-blur-sm">
                         By Students, For Students
                     </span>
                     <h1 id="home-title" class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
@@ -429,7 +439,7 @@
                          <h3 class="text-xl font-bold mb-2">Practice Quizzes</h3>
                          <p class="text-gray-600">Test your knowledge with interactive quizzes and tests.</p>
                      </div>
-                      <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
+                     <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover-effect">
                          <div class="bg-yellow-100 text-yellow-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                          </div>
@@ -463,7 +473,7 @@
                     </div>
                 </div>
                 <div class="course-card bg-white rounded-xl shadow-lg card-hover-effect cursor-pointer" data-course="precalculus" role="button" tabindex="0">
-                    <img src="httpsT://images.unsplash.com/photo-1543286386-2e65930686B5?auto=format&fit=crop&w=600&q=80" alt="Pre-Calculus" class="course-img rounded-t-xl">
+                    <img src="httpsAdding a subtle border to all white cards..." alt="Pre-Calculus" class="course-img rounded-t-xl">
                     <div class="p-6">
                         <h3 class="text-2xl font-bold text-yellow-600">Pre-Calculus</h3><p class="mt-2 text-gray-600">Prepare for calculus with trigonometry and series.</p>
                     </div>
@@ -493,31 +503,25 @@
              
              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                  <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
-                    <div class="bg-blue-500 h-48 flex items-center justify-center">
-                       <span class="text-white text-5xl font-bold">24</span>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1541123434578-62592b614c48?auto=format&fit=crop&w=600&q=80" alt="Algebra equations on a chalkboard" class="game-img rounded-t-xl">
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold">Equation Challenge</h3>
+                        <h3 class="text-2xl font-bold text-blue-600">Equation Challenge</h3>
                         <p class="mt-2 text-gray-600">Race against the clock to solve algebraic equations!</p>
                         <a href="#equation-challenge" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition block text-center">Play Now</a>
                     </div>
                 </div>
                  <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
-                    <div class="bg-purple-500 h-48 flex items-center justify-center">
-                       <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1598603683100-798800c65b16?auto=format&fit=crop&w=600&q=80" alt="Abstract 3D geometric tunnel" class="game-img rounded-t-xl">
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold">Geo-Lane Rush</h3>
+                        <h3 class="text-2xl font-bold text-purple-600">Geo-Lane Rush</h3>
                         <p class="mt-2 text-gray-600">Dodge obstacles by solving geometry problems at high speed.</p>
                          <a href="#geometry-dash" class="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition block text-center">Play Now</a>
                     </div>
                 </div>
                  <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
-                    <div class="bg-green-500 h-48 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm0 0h6.5m0 0l1-1m-1 1l-1 1m0 0H3m3.5-4H7m0 0l1 1m-1-1l-1 1m0 0H3" /></svg>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1554676652-fadaa05e5d5e?auto=format&fit=crop&w=600&q=80" alt="Snowy mountain peak" class="game-img rounded-t-xl">
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold">Calculus Climber</h3>
+                        <h3 class="text-2xl font-bold text-green-600">Calculus Climber</h3>
                         <p class="mt-2 text-gray-600">Climb the mountain by solving derivatives with precision.</p>
                          <a href="#calculus-climber" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition block text-center">Play Now</a>
                     </div>
@@ -833,23 +837,57 @@
         </section>
 
 
+        <section id="about" class="page" role="region" aria-labelledby="about-title">
+            <h2 id="about-title" class="text-4xl font-bold text-gray-800 mb-12 text-center">About Math Hub</h2>
+            
+            <div class="bg-white p-8 md:p-12 rounded-xl shadow-lg space-y-12">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-3xl font-bold gradient-text mb-4">Our Mission</h3>
+                        <p class="text-lg text-gray-700 leading-relaxed mb-4">Math Hub is a student-led initiative designed to make learning math more engaging, collaborative, and accessible.</p>
+                        <p class="text-gray-600 leading-relaxed">We believe that peer-to-peer support is one of the most effective ways to learn, which is why we've created this platform to connect students with resources, track their progress, and feel motivated to succeed in mathematics.</p>
+                    </div>
+                    <div class="rounded-xl overflow-hidden shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80" alt="Students collaborating around a table" class="w-full h-full object-cover">
+                    </div>
+                </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="rounded-xl overflow-hidden shadow-xl md:order-last">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80" alt="Person designing on a computer" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold gradient-text mb-4">Planning & Development (FBLA)</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">This website was designed and developed for the FBLA Website Design competition, addressing the 2025-2026 topic: "Design to Learn: Build a Student Learning Hub."</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600">
+                            <li><strong>User-Centered Planning:</strong> We identified core student needs: resource access, progress tracking, and personalized help.</li>
+                            <li><strong>Modern Design:</strong> We chose a vibrant, responsive layout with modern gradients and animations to create an engaging user experience.</li>
+                            <li><strong>Interactive Implementation:</strong> Built as a single-page application (SPA) using HTML, Tailwind CSS, and JavaScript to be seamless and fast.</li>
+                        </ul>
+                    </div>
+                </div>
 
-        <section id="about" class="page max-w-4xl mx-auto" role="region" aria-labelledby="about-title">
-            <h2 id="about-title" class="text-4xl font-bold text-gray-800 mb-6 text-center">About Math Hub</h2>
-            <div class="space-y-6 text-gray-700 leading-relaxed bg-white p-10 rounded-xl shadow-lg">
-                <p class="text-lg">Math Hub is a student-led initiative designed to make learning math more engaging, collaborative, and accessible. We believe that peer-to-peer support is one of the most effective ways to learn, which is why we've created this platform to connect students with resources and tutors.</p>
-                <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Our Mission</h3>
-                <p>Our mission is to build a supportive online community where students can find the help they need, track their progress, and feel motivated to succeed in mathematics. We aim to provide high-quality, easy-to-understand resources that supplement classroom learning.</p>
-                 <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Planning & Development (FBLA)</h3>
-                <p>This website was designed and developed for the FBLA Website Design competition. Our process focused on user-centered design principles to meet the 2025-2026 topic: "Design to Learn: Build a Student Learning Hub."</p>
-                <ul class="list-disc list-inside space-y-2 pl-4">
-                    <li><strong>Planning:</strong> We identified the core needs of a student user: access to resources, progress tracking, and personalized help. This led to the three key features: the Resources section, the Student Dashboard (post-login), and the interactive Tutoring Calendar.</li>
-                    <li><strong>Design:</strong> To stand out, we chose a vibrant, energetic color palette and incorporated modern design elements like gradients and subtle animations. The layout is fully responsive, ensuring compatibility on desktops, tablets, and mobile devices, as per competition guidelines.</li>
-                    <li><strong>Implementation:</strong> The site is built as a single-page application using HTML, Tailwind CSS, and JavaScript. This approach provides a seamless user experience. Interactive elements like the tutoring calendar, quizzes, and learning games were implemented to maximize user engagement.</li>
-                </ul>
-                <h3 class="text-2xl font-semibold text-gray-800 pt-4 border-t mt-6">Measuring Success</h3>
-                <p>To evaluate the effectiveness of this platform, we plan to track key metrics such as user engagement time, completion rates for quizzes and games, and the number of tutoring sessions booked through the calendar. This data will help us continuously improve the learning experience.</p>
+                <div>
+                    <h3 class="text-3xl font-bold gradient-text mb-8 text-center">Our Team (Example)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
+                            <h4 class="text-xl font-bold text-gray-800">Student A</h4>
+                            <p class="text-blue-600">Project Lead & JS Dev</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
+                            <img src="https://images.unsplash.com/photo-1520813792230-56882cbe5c88?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
+                            <h4 class="text-xl font-bold text-gray-800">Student B</h4>
+                            <p class="text-purple-600">UX/UI Designer</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
+                            <h4 class="text-xl font-bold text-gray-800">Student C</h4>
+                            <p class="text-green-600">Content & Game Logic</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -877,7 +915,7 @@
                 </button>
                 <button id="calc-enlarge" class="p-1 hover:bg-white/20 rounded transition" title="Maximize">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
-CHOOSE_VOTE_ACTION_DIRECT</button>
+                </button>
                 <button id="calc-close" class="p-1 hover:bg-white/20 rounded transition" title="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
