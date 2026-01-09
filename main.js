@@ -1,17 +1,231 @@
 document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.page');
     const navLinks = document.querySelectorAll('.nav-link');
+    // --- Mobile Nav Logic ---
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
 
-    // --- Course Data (Unchanged) ---
-const courseData = {
-        algebra1: { title: 'Algebra 1', /* ... keep contents ... */ color: 'blue' },
-        geometry: { title: 'Geometry', /* ... keep contents ... */ color: 'indigo' },
-        algebra2: { title: 'Algebra 2', /* ... keep contents ... */ color: 'blue' },
-        precalculus: { title: 'Pre-Calculus', /* ... keep contents ... */ color: 'teal' }, // Changed from yellow
-        calculus: { title: 'Calculus', /* ... keep contents ... */ color: 'purple' }, // Changed from red
-        statistics: { title: 'Statistics', /* ... keep contents ... */ color: 'slate' } // Changed from indigo to slate/gray
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+
+// --- 1. Course Data (Fixed) ---
+    const courseData = {
+        algebra1: {
+            title: 'Algebra 1',
+            color: 'blue',
+            description: 'Master the fundamentals of algebra, including variables, equations, and functions.',
+            videoTitle: 'Introduction to Linear Equations',
+            videoUrl: 'https://www.youtube.com/embed/fTvgHgS96Wk',
+            quizTitle: 'Algebra Basics Quiz',
+            quizQuestions: [
+                { q: 'Solve for x: 2x + 5 = 15', options: ['5', '10', '2', '7.5'], correct: 0 },
+                { q: 'What is the slope in y = 3x + 2?', options: ['2', '3', 'x', 'y'], correct: 1 },
+                { q: 'Simplify: 3(x + 2)', options: ['3x + 2', '3x + 6', 'x + 6', '3x'], correct: 1 }
+            ]
+        },
+        geometry: {
+            title: 'Geometry',
+            color: 'indigo',
+            description: 'Explore the properties of shapes, sizes, relative positions, and dimensions of space.',
+            videoTitle: 'The Pythagorean Theorem Explained',
+            videoUrl: 'https://www.youtube.com/embed/AA6RfgP-AHU',
+            quizTitle: 'Geometry Shapes Quiz',
+            quizQuestions: [
+                { q: 'What is the sum of angles in a triangle?', options: ['180°', '360°', '90°', '270°'], correct: 0 },
+                { q: 'A square has a side length of 4. What is the area?', options: ['8', '12', '16', '64'], correct: 2 },
+                { q: 'What do you call a triangle with 3 equal sides?', options: ['Isosceles', 'Scalene', 'Equilateral', 'Right'], correct: 2 }
+            ]
+        },
+        algebra2: {
+            title: 'Algebra 2',
+            color: 'sky',
+            description: 'Dive deeper into polynomial functions, rational expressions, and complex numbers.',
+            videoTitle: 'Introduction to Polynomials',
+            videoUrl: 'https://www.youtube.com/embed/ffLLmV4mZwU',
+            quizTitle: 'Polynomials Quiz',
+            quizQuestions: [
+                { q: 'What is i squared equal to?', options: ['1', '-1', '0', 'undefined'], correct: 1 },
+                { q: 'How many roots does x^2 - 9 = 0 have?', options: ['0', '1', '2', '3'], correct: 2 },
+                { q: 'Expand (x+2)(x-2)', options: ['x^2+4', 'x^2-4', 'x^2+4x-4', 'x^2-2x'], correct: 1 }
+            ]
+        },
+        precalculus: {
+            title: 'Pre-Calculus',
+            color: 'teal',
+            description: 'Prepare for calculus with a focus on trigonometry, vectors, and limits.',
+            videoTitle: 'Unit Circle and Trigonometry',
+            videoUrl: 'https://www.youtube.com/embed/1-HRaJZAqY0',
+            quizTitle: 'Trig Functions Quiz',
+            quizQuestions: [
+                { q: 'What is sin(90°)?', options: ['0', '1', '-1', '0.5'], correct: 1 },
+                { q: 'Convert 180° to radians', options: ['π', '2π', 'π/2', '3π/2'], correct: 0 },
+                { q: 'What is the period of y = sin(x)?', options: ['π', '2π', '4π', 'π/2'], correct: 1 }
+            ]
+        },
+        calculus: {
+            title: 'Calculus',
+            color: 'purple',
+            description: 'Understand the study of continuous change, including derivatives and integrals.',
+            videoTitle: 'The Concept of the Derivative',
+            videoUrl: 'https://www.youtube.com/embed/9vKqVkMQHKk',
+            quizTitle: 'Derivatives Quiz',
+            quizQuestions: [
+                { q: 'What is the derivative of x^2?', options: ['x', '2x', '2', 'x^2'], correct: 1 },
+                { q: 'What represents the area under a curve?', options: ['Derivative', 'Integral', 'Limit', 'Tangent'], correct: 1 },
+                { q: 'Limit of 1/x as x approaches infinity?', options: ['0', '1', 'Infinity', 'Undefined'], correct: 0 }
+            ]
+        },
+        statistics: {
+            title: 'Statistics',
+            color: 'slate',
+            description: 'Learn techniques for collecting, analyzing, interpreting, and presenting data.',
+            videoTitle: 'Mean, Median, and Mode',
+            videoUrl: 'https://www.youtube.com/embed/5C9LBF3b65s',
+            quizTitle: 'Data Analysis Quiz',
+            quizQuestions: [
+                { q: 'What is the average of 2, 4, 6?', options: ['2', '3', '4', '5'], correct: 2 },
+                { q: 'Which value is the "middle" number?', options: ['Mean', 'Median', 'Mode', 'Range'], correct: 1 },
+                { q: 'Probability of flipping heads on a coin?', options: ['25%', '50%', '75%', '100%'], correct: 1 }
+            ]
+        }
+    };
+// --- Course Card Interaction Logic ---
+// --- Course Card Interaction Logic (UPDATED) ---
+    const courseCards = document.querySelectorAll('.course-card');
+    const learningScreen = document.getElementById('learning-screen');
+    const backBtn = document.getElementById('back-to-courses');
+
+    // DOM Elements for the Learning Screen
+    const lsTitle = document.getElementById('ls-title');
+    const lsDesc = document.getElementById('ls-description');
+    const lsVideo = document.getElementById('ls-video');
+    const lsMaterials = document.getElementById('ls-materials-list');
+    const lsQuizContainer = document.getElementById('ls-quiz-container');
+    const lsSubmitQuiz = document.getElementById('ls-submit-quiz');
+    const lsQuizResult = document.getElementById('ls-quiz-result');
+
+    // Helper: Switch Views
+    const openLearningScreen = () => {
+        pages.forEach(p => p.classList.remove('active'));
+        learningScreen.classList.add('active');
+        // Ensure the learning screen is visible by removing hidden class if present
+        learningScreen.classList.remove('hidden');
+        window.scrollTo(0, 0);
     };
 
+    const closeLearningScreen = () => {
+        learningScreen.classList.remove('active');
+        learningScreen.classList.add('hidden');
+        // Show the courses page again
+        document.getElementById('courses').classList.add('active');
+    };
+
+    if (courseCards && learningScreen) {
+        // 1. Handle Card Clicks
+        courseCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const courseKey = card.getAttribute('data-course');
+                const data = courseData[courseKey];
+
+                if (data) {
+                    // Populate Main Info
+                    lsTitle.textContent = data.title;
+                    lsTitle.className = `text-3xl font-bold text-${data.color}-600`; 
+                    lsDesc.textContent = data.description;
+                    lsVideo.src = data.videoUrl;
+
+                    // Populate Resources (Mock Data + Dynamic Color)
+                    const resources = [
+                        { name: 'Lecture Notes (PDF)', size: '2.4 MB' },
+                        { name: 'Practice Worksheet', size: '1.1 MB' },
+                        { name: 'Answer Key', size: '0.5 MB' },
+                        { name: 'External Reference Guide', size: 'Link' }
+                    ];
+                    
+                    lsMaterials.innerHTML = resources.map(res => `
+                        <li class="group flex items-center justify-between p-3 rounded-lg hover:bg-${data.color}-50 cursor-pointer transition border border-transparent hover:border-${data.color}-100">
+                            <div class="flex items-center">
+                                <div class="bg-${data.color}-100 p-2 rounded-lg mr-3 text-${data.color}-600 group-hover:bg-white transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <span class="font-medium text-gray-700 group-hover:text-${data.color}-700">${res.name}</span>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-400 bg-gray-100 px-2 py-1 rounded">${res.size}</span>
+                        </li>
+                    `).join('');
+                    // Populate Sidebar Quiz (Styled for Light Mode)
+                    lsQuizContainer.innerHTML = '';
+                    const miniQuiz = data.quizQuestions.slice(0, 2);
+                    miniQuiz.forEach((q, idx) => {
+                        lsQuizContainer.innerHTML += `
+                            <div class="mb-5">
+                                <p class="text-sm font-bold mb-2 text-gray-700 flex items-center">
+                                    <span class="w-5 h-5 rounded-full bg-gray-100 text-gray-500 text-xs flex items-center justify-center mr-2 border border-gray-200">${idx + 1}</span>
+                                    ${q.q}
+                                </p>
+                                <div class="relative">
+                                    <select id="ls-q-${idx}" data-correct="${q.correct}" class="w-full appearance-none bg-gray-50 hover:bg-white border border-gray-200 text-gray-700 text-sm rounded-xl p-3 pr-8 focus:ring-2 focus:ring-${data.color}-500 focus:border-${data.color}-500 transition-all cursor-pointer outline-none font-medium">
+                                        <option value="">Select answer...</option>
+                                        ${q.options.map((opt, optIdx) => `<option value="${optIdx}">${opt}</option>`).join('')}
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Quiz Logic
+                    lsSubmitQuiz.onclick = () => {
+                        let score = 0;
+                        const selects = lsQuizContainer.querySelectorAll('select');
+                        selects.forEach(select => {
+                            if (parseInt(select.value) === parseInt(select.dataset.correct)) score++;
+                        });
+                        lsQuizResult.textContent = `You got ${score} / ${selects.length} correct!`;
+                        lsQuizResult.className = `mt-3 text-center font-bold block ${score === selects.length ? 'text-green-400' : 'text-yellow-400'}`;
+                        lsQuizResult.classList.remove('hidden');
+                    };
+
+                    lsQuizResult.classList.add('hidden'); // Reset result
+                    openLearningScreen();
+                }
+            });
+        });
+
+        // 2. Handle Back Button
+        if (backBtn) {
+            backBtn.addEventListener('click', closeLearningScreen);
+        }
+    }
+
+    // Global Quiz Checker
+    window.checkQuiz = function(courseKey) {
+        const data = courseData[courseKey];
+        let score = 0;
+        const resultDiv = document.getElementById(`quiz-result-${courseKey}`);
+        
+        data.quizQuestions.forEach((q, index) => {
+            const selected = document.querySelector(`input[name="q-${courseKey}-${index}"]:checked`);
+            if (selected && parseInt(selected.value) === q.correct) {
+                score++;
+            }
+        });
+
+        resultDiv.textContent = `You scored ${score} out of ${data.quizQuestions.length}!`;
+        resultDiv.className = `mt-4 text-center font-bold text-xl text-${data.color}-600 block animate-bounce`;
+    };
 
     // --- Dashboard Data (Unchanged) ---
     const dashboardData = {
@@ -71,19 +285,57 @@ const courseData = {
     };
 
     // --- Calendar State & Data (Unchanged) ---
-    let currentDate = new Date();
+    let currentDate;
     const tutorSlots = {
-        '2025-10-20': [
-            { id: 1, time: '3:00 PM', tutor: 'Mrs. Davis', subject: 'Algebra 1', type: '1-on-1', slots: 1, maxSlots: 1 },
-            { id: 2, time: '4:00 PM', tutor: 'Mr. Smith', subject: 'Pre-Calculus', type: 'Group Study', slots: 3, maxSlots: 5 }
+        '2026-01-22': [
+            { id: 24, time: '3:30 PM', tutor: 'Mr. Smith', subject: 'Pre-Calculus', type: 'Group Study', slots: 3, maxSlots: 6 }
         ],
-        '2025-10-22': [
-            { id: 3, time: '2:30 PM', tutor: 'Dr. Chen', subject: 'Calculus', type: '1-on-1', slots: 2, maxSlots: 2 },
-            { id: 4, time: '4:00 PM', tutor: 'Mrs. Davis', subject: 'Geometry', type: 'Group Study', slots: 0, maxSlots: 5 },
-            { id: 5, time: '5:00 PM', tutor: 'Ms. Rodriguez', subject: 'Algebra 2', type: '1-on-1', slots: 1, maxSlots: 1 }
+
+        // --- FEBRUARY 2026 ---
+        '2026-02-05': [
+            { id: 25, time: '4:00 PM', tutor: 'Mrs. Davis', subject: 'Geometry Proofs', type: 'Group Study', slots: 6, maxSlots: 8 }
         ],
-        '2025-11-05': [
-            { id: 6, time: '4:00 PM', tutor: 'Mr. Smith', subject: 'Algebra 2', type: 'Group Study', slots: 5, maxSlots: 5 }
+        '2026-02-11': [
+            { id: 26, time: '3:00 PM', tutor: 'Dr. Chen', subject: 'Derivatives', type: '1-on-1', slots: 0, maxSlots: 1 }, // Full
+            { id: 27, time: '4:00 PM', tutor: 'Ms. Rodriguez', subject: 'SAT Math Prep', type: 'Group Study', slots: 10, maxSlots: 12 }
+        ],
+        '2026-02-18': [
+            { id: 28, time: '5:00 PM', tutor: 'Mr. Smith', subject: 'Statistics Project Help', type: '1-on-1', slots: 1, maxSlots: 1 }
+        ],
+
+        // --- MARCH 2026 ---
+        '2026-03-04': [
+            { id: 29, time: '3:30 PM', tutor: 'Mrs. Davis', subject: 'Algebra 1', type: 'Group Study', slots: 5, maxSlots: 5 }
+        ],
+        '2026-03-12': [
+            { id: 30, time: '4:00 PM', tutor: 'Dr. Chen', subject: 'Integrals', type: 'Group Study', slots: 3, maxSlots: 8 }
+        ],
+        '2026-03-25': [
+            { id: 31, time: '3:00 PM', tutor: 'Ms. Rodriguez', subject: 'Trigonometry', type: '1-on-1', slots: 1, maxSlots: 1 },
+            { id: 32, time: '4:30 PM', tutor: 'Mr. Smith', subject: 'Probability', type: 'Group Study', slots: 4, maxSlots: 6 }
+        ],
+
+        // --- APRIL 2026 ---
+        '2026-04-08': [
+            { id: 33, time: '4:00 PM', tutor: 'Mrs. Davis', subject: 'Geometry Construction', type: 'Group Study', slots: 8, maxSlots: 10 }
+        ],
+        '2026-04-15': [
+            { id: 34, time: '3:00 PM', tutor: 'Dr. Chen', subject: 'AP Calculus Prep', type: 'Group Study', slots: 15, maxSlots: 20 },
+            { id: 35, time: '5:00 PM', tutor: 'Ms. Rodriguez', subject: 'Algebra 2', type: '1-on-1', slots: 0, maxSlots: 1 }
+        ],
+        '2026-04-22': [
+            { id: 36, time: '3:30 PM', tutor: 'Mr. Smith', subject: 'AP Stats Prep', type: 'Group Study', slots: 12, maxSlots: 15 }
+        ],
+
+        // --- MAY 2026 ---
+        '2026-05-06': [
+            { id: 37, time: '3:00 PM', tutor: 'Mrs. Davis', subject: 'End of Year Review', type: 'Group Study', slots: 20, maxSlots: 25 }
+        ],
+        '2026-05-13': [
+            { id: 38, time: '4:00 PM', tutor: 'Dr. Chen', subject: 'Calculus Final Review', type: 'Group Study', slots: 10, maxSlots: 15 }
+        ],
+        '2026-05-20': [
+            { id: 39, time: '2:30 PM', tutor: 'Ms. Rodriguez', subject: 'Summer Math Plans', type: '1-on-1', slots: 1, maxSlots: 1 }
         ]
     };
     
@@ -1018,6 +1270,7 @@ const courseData = {
     const miniCalc = document.getElementById('mini-calc');
     const calcDisplay = document.getElementById('calc-display');
     const calcKeys = document.getElementById('calc-keys');
+    const calcHeader = document.getElementById('calc-header');
     let currentExpression = '0';
     let lastResult = null;
 
@@ -1073,7 +1326,12 @@ const courseData = {
         if (!e.target.matches('.calc-btn')) return;
 
         const button = e.target;
-        const value = button.dataset.value;
+        let value = button.dataset.value;
+        const action = button.dataset.action;
+
+        if (action === 'clear') value = 'C';
+        else if (action === 'backspace') value = '⌫';
+        else if (action === 'calculate') value = '=';
 
         // Add button click animation
         button.style.transform = 'scale(0.95)';
@@ -1099,6 +1357,8 @@ const courseData = {
                 currentExpression = '0' + value;
             } else if (value === '√') {
                 currentExpression = '√(';
+            } else if (['sin', 'cos', 'tan', 'log', 'ln'].includes(value)) {
+                currentExpression = value + '(';
             } else if (value === '(') {
                 currentExpression = '(';
             } else {
@@ -1115,6 +1375,25 @@ const courseData = {
                 // Handle square roots properly
                 // Convert √(number) to Math.sqrt(number)
                 expression = expression.replace(/√\(/g, 'Math.sqrt(');
+
+                // Handle factorial (simple integer factorial)
+                expression = expression.replace(/(\d+)!/g, (match, num) => {
+                    let n = parseInt(num);
+                    if (n < 0) return 'NaN';
+                    if (n === 0) return '1';
+                    let res = 1;
+                    for (let i = 1; i <= n; i++) res *= i;
+                    return res;
+                });
+
+                // Add scientific support
+                expression = expression.replace(/sin/g, 'Math.sin');
+                expression = expression.replace(/cos/g, 'Math.cos');
+                expression = expression.replace(/tan/g, 'Math.tan');
+                expression = expression.replace(/log/g, 'Math.log10');
+                expression = expression.replace(/ln/g, 'Math.log');
+                expression = expression.replace(/π/g, 'Math.PI');
+                expression = expression.replace(/e/g, 'Math.E');
 
                 // Replace operators with JavaScript equivalents
                 expression = expression.replace(/×/g, '*');
@@ -1144,6 +1423,13 @@ const courseData = {
             } else {
                 currentExpression += '√(';
             }
+        } else if (['sin', 'cos', 'tan', 'log', 'ln'].includes(value)) {
+            if (currentExpression === '0') currentExpression = value + '(';
+            else currentExpression += value + '(';
+        } else if (value === '1/x') {
+            currentExpression = '1/(' + currentExpression + ')';
+        } else if (value === '!') {
+            currentExpression += '!';
         } else if (value === '+/-') {
             // Toggle sign of the current number
             try {
@@ -1198,84 +1484,110 @@ const courseData = {
             handleInput('%');
         }
     });
-
-    // Draggable calculator with smooth movement
-    let isDragging = false;
-    let currentX, currentY, initialX, initialY;
-    const calcHeader = document.getElementById('calc-header');
-
-    calcHeader.addEventListener('mousedown', dragStart);
-    calcHeader.addEventListener('touchstart', dragStart);
-
-    function dragStart(e) {
-        if (e.target.closest('button')) return; // Don't drag when clicking buttons
-
-        const rect = miniCalc.getBoundingClientRect();
-
-        if (e.type === 'touchstart') {
-            initialX = e.touches[0].clientX - rect.left;
-            initialY = e.touches[0].clientY - rect.top;
-        } else {
-            initialX = e.clientX - rect.left;
-            initialY = e.clientY - rect.top;
-            e.preventDefault();
-        }
-
-        isDragging = true;
-        calcHeader.style.cursor = 'grabbing';
-        miniCalc.style.transition = 'none';
-    }
-
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag);
-
-    function drag(e) {
-        if (!isDragging) return;
-
-        let clientX, clientY;
-        if (e.type === 'touchmove') {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-        } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
-        }
-
-        currentX = clientX - initialX;
-        currentY = clientY - initialY;
-
-        // Constrain to viewport
-        const maxX = window.innerWidth - miniCalc.offsetWidth;
-        const maxY = window.innerHeight - miniCalc.offsetHeight;
-
-        currentX = Math.max(0, Math.min(currentX, maxX));
-        currentY = Math.max(0, Math.min(currentY, maxY));
-
-        miniCalc.style.left = currentX + 'px';
-        miniCalc.style.top = currentY + 'px';
-        miniCalc.style.bottom = 'auto';
-        miniCalc.style.right = 'auto';
-        miniCalc.style.transform = 'none';
-    }
-
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
-
-    function dragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        calcHeader.style.cursor = 'move';
-        miniCalc.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-    }
-
-
-    // --- Initial Setup ---
-    showPage(window.location.hash);
-    renderCalendar();
+// --- Draggable Mini Calculator Logic (FIXED) ---
+    // Uses transform for 60fps smoothness and prevents text highlighting
     
-    if (window.location.hash === '' || window.location.hash === '#home') {
-       // do nothing
-    } else if (window.location.hash === '#dashboard') {
+    // We reuse the variables defined above: miniCalc, calcHeader
+    if (miniCalc && calcHeader) {
+        let isDragging = false;
+        let startX, startY, initialTranslateX = 0, initialTranslateY = 0;
+
+        // Helper to get current transform values
+        const getTranslateValues = (element) => {
+            const style = window.getComputedStyle(element);
+            const matrix = new WebKitCSSMatrix(style.transform);
+            return { x: matrix.m41, y: matrix.m42 };
+        };
+
+        const dragStart = (e) => {
+            if (e.target.closest('button')) return; // Ignore button clicks
+
+            // Get current position (so we don't snap back to 0,0)
+            const currentPos = getTranslateValues(miniCalc);
+            initialTranslateX = currentPos.x;
+            initialTranslateY = currentPos.y;
+
+            if (e.type === 'touchstart') {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            } else {
+                startX = e.clientX;
+                startY = e.clientY;
+                e.preventDefault(); // STOPS THE HIGHLIGHTING
+            }
+
+            isDragging = true;
+            calcHeader.style.cursor = 'grabbing';
+            // Disable transition during drag for instant response
+            miniCalc.style.transition = 'none';
+        };
+
+        const drag = (e) => {
+            if (!isDragging) return;
+
+            e.preventDefault(); // Stop scrolling on mobile
+
+            let clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            // Calculate how far we moved
+            const deltaX = clientX - startX;
+            const deltaY = clientY - startY;
+
+            // Apply new position
+            const newX = initialTranslateX + deltaX;
+            const newY = initialTranslateY + deltaY;
+
+            miniCalc.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+        };
+
+        const dragEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            calcHeader.style.cursor = 'move';
+            // Re-enable smooth transition for maximize/minimize actions
+            miniCalc.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        };
+
+        // Attach Listeners
+        calcHeader.addEventListener('mousedown', dragStart);
+        calcHeader.addEventListener('touchstart', dragStart, { passive: false });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+    }
+
+
+// --- Initial Setup ---
+
+    // 1. Force the calendar to start on the correct date
+    // We use "new Date()" to show the current real-world month (Jan).
+    // If you want to force it to show Nov 2025 data first, use: new Date(2025, 10, 1)
+    currentDate = new Date(); 
+
+    // 2. Handle Routing (Load the correct page)
+    showPage(window.location.hash);
+
+    // 3. Render the Calendar Grid IMMEDIATELY
+    // This draws the boxes so you don't have to click '>'
+    renderCalendar();
+
+    // 4. Update the side panel (Schedule)
+    // Try to select today's date in the side panel
+    const todayIso = currentDate.toISOString().split('T')[0];
+    renderDaySchedule(todayIso);
+
+    // 5. Handle Calculator visibility if loading directly into dashboard
+    if (window.location.hash === '#dashboard') {
         renderDashboard();
     }
-});
+}); // End of DOMContentLoaded
