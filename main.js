@@ -3,14 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
 
     // --- Course Data (Unchanged) ---
-    const courseData = {
-        algebra1: { title: 'Algebra 1', videos: ['Intro to Variables', 'Solving Linear Equations'], materials: ['Worksheet.pdf'], quiz: [{ q: '2x + 3 = 7', a: '2' }], color: 'blue' },
-        geometry: { title: 'Geometry', videos: ['Understanding Angles', 'Pythagorean Theorem'], materials: ['Postulates.pdf'], quiz: [{ q: 'Sum of angles in a triangle?', a: '180' }], color: 'purple' },
-        algebra2: { title: 'Algebra 2', videos: ['Polynomial Functions', 'Complex Numbers'], materials: ['Practice.pdf'], quiz: [{ q: 'What is i^2?', a: '-1' }], color: 'green' },
-        precalculus: { title: 'Pre-Calculus', videos: ['Unit Circle', 'Sequences and Series'], materials: ['Formulas.pdf'], quiz: [{ q: 'sin(90)?', a: '1' }], color: 'yellow' },
-        calculus: { title: 'Calculus', videos: ['Intro to Limits', 'Power Rule'], materials: ['Rules.pdf'], quiz: [{ q: 'Derivative of x^2?', a: '2x' }], color: 'red' },
-        statistics: { title: 'Statistics', videos: ['Mean, Median, Mode', 'Standard Deviation'], materials: ['Tables.pdf'], quiz: [{ q: 'Most frequent value?', a: 'Mode' }], color: 'indigo' }
+const courseData = {
+        algebra1: { title: 'Algebra 1', /* ... keep contents ... */ color: 'blue' },
+        geometry: { title: 'Geometry', /* ... keep contents ... */ color: 'indigo' },
+        algebra2: { title: 'Algebra 2', /* ... keep contents ... */ color: 'blue' },
+        precalculus: { title: 'Pre-Calculus', /* ... keep contents ... */ color: 'teal' }, // Changed from yellow
+        calculus: { title: 'Calculus', /* ... keep contents ... */ color: 'purple' }, // Changed from red
+        statistics: { title: 'Statistics', /* ... keep contents ... */ color: 'slate' } // Changed from indigo to slate/gray
     };
+
 
     // --- Dashboard Data (Unchanged) ---
     const dashboardData = {
@@ -29,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         courseProgress: [
             { course: 'Algebra 1', completed: 8, total: 10, percentage: 80, color: 'blue' },
-            { course: 'Geometry', completed: 6, total: 10, percentage: 60, color: 'purple' },
-            { course: 'Algebra 2', completed: 5, total: 10, percentage: 50, color: 'green' },
-            { course: 'Pre-Calculus', completed: 7, total: 10, percentage: 70, color: 'yellow' },
-            { course: 'Calculus', completed: 4, total: 10, percentage: 40, color: 'red' },
-            { course: 'Statistics', completed: 9, total: 10, percentage: 90, color: 'indigo' }
+            { course: 'Geometry', completed: 6, total: 10, percentage: 60, color: 'indigo' },
+            { course: 'Algebra 2', completed: 5, total: 10, percentage: 50, color: 'blue' },
+            { course: 'Pre-Calculus', completed: 7, total: 10, percentage: 70, color: 'teal' },
+            { course: 'Calculus', completed: 4, total: 10, percentage: 40, color: 'purple' },
+            { course: 'Statistics', completed: 9, total: 10, percentage: 90, color: 'slate' }
         ],
         lessons: [
             { id: 1, title: 'Introduction to Variables', course: 'Algebra 1', completed: true },
@@ -113,8 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const courseDetails = document.getElementById('course-details');
 
         courseTitle.textContent = data.title;
-        courseTitle.className = `text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-${data.color}-500 to-${data.color}-700`;
-
+        courseTitle.className = `text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-${data.color}-600 to-${data.color}-400 mb-6`;
         courseDetails.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div><h4 class="text-xl font-semibold mb-3 text-gray-700">Videos</h4><ul class="list-disc list-inside space-y-2">${data.videos.map(v => `<li><a href="#" class="text-blue-600 hover:underline">${v}</a></li>`).join('')}</ul></div>
