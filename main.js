@@ -1591,3 +1591,23 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
     }
 }); // End of DOMContentLoaded
+// Contact Form Logic
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('button');
+        const feedback = document.getElementById('form-feedback');
+        
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            contactForm.reset();
+            btn.textContent = 'Send Message';
+            btn.disabled = false;
+            feedback.classList.remove('hidden');
+            setTimeout(() => feedback.classList.add('hidden'), 3000);
+        }, 1500);
+    });
+}

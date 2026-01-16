@@ -608,7 +608,7 @@ input, button {
                     </div>
                     <div class="p-6">
                         <h3 class="text-2xl font-bold text-blue-600">Equation Challenge</h3>
-                        <p class="mt-2 text-gray-600">Race against the clock to solve algebraic equations!</p>
+                        <p class="text-gray-600 mb-4">Race against the clock to solve linear algebraic equations before time runs out.</p>
                         <a href="#equation-challenge" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition block text-center">Play Now</a>
                     </div>
                 </div>
@@ -618,8 +618,8 @@ input, button {
                     </div>
                     <div class="p-6">
                         <h3 class="text-2xl font-bold text-purple-600">Geo-Lane Rush</h3>
-                        <p class="mt-2 text-gray-600">Dodge obstacles by solving geometry problems at high speed.</p>
-                         <a href="#geometry-dash" class="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition block text-center">Play Now</a>
+                        <p class="text-gray-600 mb-4">Dodge obstacles by solving geometry problems at high speed. Test your reflexes and math skills.</p>
+                        <a href="#geometry-dash" class="mt-4 w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition block text-center">Play Now</a>
                     </div>
                 </div>
                  <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect">
@@ -628,8 +628,8 @@ input, button {
                     </div>
                     <div class="p-6">
                         <h3 class="text-2xl font-bold text-green-600">Calculus Climber</h3>
-                        <p class="mt-2 text-gray-600">Climb the mountain by solving derivatives with precision.</p>
-                         <a href="#calculus-climber" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition block text-center">Play Now</a>
+                        <p class="text-gray-600 mb-4">Climb the mountain by solving derivatives with precision. The higher you go, the harder the math.</p>
+                        <a href="#calculus-climber" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition block text-center">Play Now</a>
                     </div>
                 </div>
              </div>
@@ -990,57 +990,121 @@ input, button {
         </section>
 
 
-        <section id="about" class="page" role="region" aria-labelledby="about-title">
-            <div class="text-center mb-12">
-                <h2 class="inline-block text-3xl font-extrabold text-gray-900 bg-white/40 backdrop-blur-md px-10 py-3 rounded-full border border-white/50 shadow-sm">
-                    About Math Hub
+<section id="about" class="page" role="region" aria-labelledby="about-title">
+            <div class="text-center mb-16">
+                <span class="text-blue-600 font-bold tracking-wider uppercase text-sm mb-2 block">Our Story</span>
+                <h2 class="inline-block text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+                    Built by Students, <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">For Students</span>
                 </h2>
+                <div class="w-24 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
             </div>            
-            <div class="bg-white p-8 md:p-12 rounded-xl shadow-lg space-y-12">
+            
+            <div class="max-w-6xl mx-auto space-y-20">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-3xl font-bold gradient-text mb-4">Our Mission</h3>
-                        <p class="text-lg text-gray-700 leading-relaxed mb-4">Math Hub is a student-led initiative designed to make learning math more engaging, collaborative, and accessible.</p>
-                        <p class="text-gray-600 leading-relaxed">We believe that peer-to-peer support is one of the most effective ways to learn, which is why we've created this platform to connect students with resources, track their progress, and feel motivated to succeed in mathematics.</p>
+                    <div class="order-2 md:order-1">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6">Why We Created Math Hub</h3>
+                        <div class="space-y-4 text-lg text-gray-600 leading-relaxed">
+                            <p>
+                                As students at <strong>Conant High School</strong>, we noticed a recurring problem: our friends were struggling with math not because they weren't capable, but because the resources were scattered everywhere.
+                            </p>
+                            <p>
+                                We wanted to build something different. We combined the engagement of video games with the structure of a classroom. <strong>Math Hub</strong> is our answer to the 2025 FBLA challenge—a centralized ecosystem where anxiety is replaced with achievement.
+                            </p>
+                        </div>
                     </div>
-                    <div class="rounded-xl overflow-hidden shadow-xl">
-                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80" alt="Students collaborating around a table" class="w-full h-full object-cover">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div class="rounded-xl overflow-hidden shadow-xl md:order-last">
-                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80" alt="Person designing on a computer" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold gradient-text mb-4">Planning & Development (FBLA)</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">This website was designed and developed for the FBLA Website Design competition, addressing the 2025-2026 topic: "Design to Learn: Build a Student Learning Hub."</p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-600">
-                            <li><strong>User-Centered Planning:</strong> We identified core student needs: resource access, progress tracking, and personalized help.</li>
-                            <li><strong>Modern Design:</strong> We chose a vibrant, responsive layout with modern gradients and animations to create an engaging user experience.</li>
-                            <li><strong>Interactive Implementation:</strong> Built as a single-page application (SPA) using HTML, Tailwind CSS, and JavaScript to be seamless and fast.</li>
-                        </ul>
+                    <div class="order-1 md:order-2 relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                        <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white p-8 flex items-center justify-center">
+                            <img src="https://img.freepik.com/free-vector/mathematics-concept-illustration_114360-3972.jpg?w=800" alt="Students solving math problems with geometric shapes" class="rounded-xl w-full h-full object-contain transform transition duration-500 group-hover:scale-105">                        </div>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-3xl font-bold gradient-text mb-8 text-center">Our Team (Example)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
-                            <h4 class="text-xl font-bold text-gray-800">Student A</h4>
-                            <p class="text-blue-600">Project Lead & JS Dev</p>
+                    <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Meet the Developers</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        
+                        <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center">
+                            <div class="w-24 h-24 mx-auto rounded-full bg-blue-50 mb-6 flex items-center justify-center text-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-900">Raj Mehta</h4>
+                            <p class="text-blue-600 font-bold mb-4">Lead Frontend Engineer & UX</p>
+                            <p class="text-gray-600">Focused on creating the "Glassmorphism" design system and ensuring the site is fully accessible (WCAG 2.1 AA) for all students.</p>
                         </div>
-                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
-                            <img src="https://images.unsplash.com/photo-1520813792230-56882cbe5c88?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
-                            <h4 class="text-xl font-bold text-gray-800">Student B</h4>
-                            <p class="text-purple-600">UX/UI Designer</p>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center">
+                            <div class="w-24 h-24 mx-auto rounded-full bg-indigo-50 mb-6 flex items-center justify-center text-indigo-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                </svg>
+                            </div>
+                            <h4 class="text-2xl font-bold text-gray-900">Snehith Kotha</h4>
+                            <p class="text-indigo-600 font-bold mb-4">Lead Logic Developer</p>
+                            <p class="text-gray-600">Engineered the collision detection for Geo-Lane Rush and the calendar booking system algorithms using Vanilla JavaScript.</p>
                         </div>
-                        <div class="bg-gray-50 p-6 rounded-lg shadow-md card-hover-effect">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Team member" class="w-24 h-24 rounded-full mx-auto mb-4 shadow-lg">
-                            <h4 class="text-xl font-bold text-gray-800">Student C</h4>
-                            <p class="text-green-600">Content & Game Logic</p>
+
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl shadow-2xl overflow-hidden text-white">
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <div class="p-10 md:p-14 flex flex-col justify-center">
+                            <h3 class="text-3xl font-bold mb-4">Let's Connect</h3>
+                            <p class="text-blue-200 mb-8 leading-relaxed">
+                                Have a question about a math problem, found a bug in one of our games, or just want to say hi? We'd love to hear from you.
+                            </p>
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-4">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                    <span>team@mathhub.edu</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-4">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    </div>
+                                    <span>Conant High School, FBLA Chapter</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-10 md:p-14">
+                            <form id="contact-form" class="space-y-6">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Your Name</label>
+                                    <input type="text" class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white focus:outline-none transition text-gray-800 placeholder-gray-400" placeholder="John Doe" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                                    <textarea class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white focus:outline-none transition text-gray-800 placeholder-gray-400" rows="4" placeholder="How can we help?" required></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition transform hover:scale-[1.02] shadow-lg">
+                                    Send Message
+                                </button>
+                                <p id="form-feedback" class="hidden text-center text-green-600 font-bold bg-green-50 py-2 rounded-lg">Message sent successfully!</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="max-w-4xl mx-auto mt-6"> 
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center">
+                        <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        FBLA Compliance & Licenses
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-500">
+                        <div>
+                            <p><span class="font-semibold text-blue-600">Images:</span> Unsplash/Freepik</p>
+                            <p><span class="font-semibold text-blue-600">Video:</span> YouTube Embeds)</p>
+                        </div>
+                        <div>
+                            <p><span class="font-semibold text-indigo-600">Stack:</span> HTML5, Tailwind CSS, Vanilla JS</p>
+                            <p><span class="font-semibold text-indigo-600">Icons:</span> Heroicons</p>
                         </div>
                     </div>
                 </div>
@@ -1196,6 +1260,9 @@ input, button {
             <button class="calc-btn equals" data-action="calculate" style="grid-column: span 2; border-bottom-right-radius: 0.875rem;">=</button>
         </div>
     </div>
+    
+    
+    
 
     <script src="main.js"></script>
 </body>
